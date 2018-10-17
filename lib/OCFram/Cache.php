@@ -54,26 +54,7 @@ class Cache extends ApplicationComponent
 	{
 		$this->dataNews = $dataNews;
 		$variable = serialize($this->dataNews);
-		//var_dump($variable);
-		//$variable = $this->DataNews.$str.chr(8);;
-		//var_dump($variable);
-		
 		$this->write($file,$variable.chr(8));
-		
-		//echo $var2.chr(8);
-		
-		
-		//var_dump($MyObject);
-
-		/*
-		//$this->DataNews = serialize($DataNews);
-		//$variable = $this->DataNews;
-		//echo 'E:\xampp\htdocs\monsite\tmp\cache\datas'. $_SERVER['REQUEST_URI'];
-		//$this->write('E:\xampp\htdocs\monsite\tmp\cache\datas\test3333.txt',$variable);
-		$var2 =  file_get_contents('E:\xampp\htdocs\monsite\tmp\cache\datas\test.txt');
-		$MyObject = unserialize($var2);
-		return $MyObject;
-		*/
 	}
 
 	public function getData($file)
@@ -97,24 +78,18 @@ class Cache extends ApplicationComponent
 	}
 	public function write($filenam,$content)
 	{
-		//$filecache =  $this->getChemain().'/tmp/cache/views/';
 		
 		return file_put_contents($filenam, $content);
 	}
 
 	public function createcache($che,$contenu)
 	{
-	//$cho = str_replace("\\", "/", $che);
-	//echo $che;
 	return file_put_contents($che, $contenu);
 	}
 	
 	public function inc($file){
-	//$user = $this->app->user();
-    //extract($this->vars);
 
 	$filename = basename($file);
-		//echo $filename;
 
 	ob_start();
       require $file;
