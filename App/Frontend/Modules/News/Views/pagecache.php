@@ -1,0 +1,1 @@
+<p>ICI la page a mettre en cache !!!</p>
