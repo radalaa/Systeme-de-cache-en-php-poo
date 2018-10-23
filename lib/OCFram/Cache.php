@@ -16,13 +16,14 @@ class Cache extends ApplicationComponent
 	/**
 	*@params $direname le chemain du root
 	**/
-	public $dirname ;
-	protected $chemain;
-	protected $contenu;
+	private $dirname ;
+	private $chemain;
+	private $commentfile;
+	private $filenews;
 	/*
 	*@params $duree la duree de vie du cache par minute
 	*/
-	public $duree;
+	private $duree;
 	/**
 	*@params le nom de l'application qui excute le cache 
 	**/
@@ -61,7 +62,7 @@ class Cache extends ApplicationComponent
 		$variable = serialize($this->dataNews);
 		$this->write($file,$variable.chr(8));
 	}
-//Methode getData(), qui permet 
+//Methode getData(), qui permet de verifier si le fichier est valide, sinon il le supprime
 	public function getData($file,$newsfile,$commentfile)
 	{	
 		$this->newsfile = $newsfile;
@@ -81,11 +82,10 @@ class Cache extends ApplicationComponent
 		}	
 	}
 //Methode verif_Expiration() qui permet de verifier validité du fichier cache
-	public function verif_Expiration($file)
+	private function verif_Expiration($file)
 	{
 		if(file_exists($file)){
 			$lifetime = (time()-filemtime($file))/60;
-
 			if ($lifetime>$this->duree) {
 				return true;
 			}else{
@@ -109,7 +109,7 @@ class Cache extends ApplicationComponent
 				return true;
 			}
 		}	
-
+//Methode deleteCacheData() appler permet de supprimer le cache donnée on cas de ,supprision, modification, ajout de commentaire
 	public function deletecache($newsfile,$commentfile){
 		$chaine = $_SERVER['REQUEST_URI'];
 		$action = substr($chaine, 0, 11);
@@ -134,7 +134,7 @@ class Cache extends ApplicationComponent
 		return file_put_contents($filenam, $content);
 	}
 	//Méthode setChemain()
-	public function setChemain($chemain)
+	private function setChemain($chemain)
 	{
 	 $this->chemain = $chemain;
 	 return true;
