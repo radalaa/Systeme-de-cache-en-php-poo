@@ -69,7 +69,21 @@ class CommentsManagerPDO extends CommentsManager
     $q->execute();
     
     $q->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
-    
     return $q->fetch();
   }
+////////Début////////////////////////////////////////////////
+  /*
+  *@Methode pour chercher une news spésifique a l'aide de l'id commentaire
+  */
+  public function getUnique($id)
+    {
+      $requete = $this->dao->prepare('SELECT news FROM comments WHERE id = :id');
+      $requete->bindValue(':id', (int) $id, \PDO::PARAM_INT);
+      $requete->execute();
+      
+      $requete->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\Entity\Comment');
+      
+    return $requete->fetch();
+    }
+/////////Fin//////////////////////////////////////////////////
 }
