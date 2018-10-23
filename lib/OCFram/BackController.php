@@ -11,8 +11,8 @@ abstract class BackController extends ApplicationComponent
   protected $view = '';
   protected $managers = null;
   protected $name = '';
-  protected $contoller;
-  public $adresse;
+
+  protected $var; 
 
 
 
@@ -21,8 +21,6 @@ abstract class BackController extends ApplicationComponent
   {
 
     parent::__construct($app);
-
-    //echo $app;
     $this->managers = new Managers('PDO', PDOFactory::getMysqlConnexion());
     $this->page = new Page($app);
     $this->setModule($module);
@@ -30,77 +28,19 @@ abstract class BackController extends ApplicationComponent
     $this->setView($action);
 
   }
-
-  public function getchemain(){
-    if (!defined('ROOT')) define('ROOT', dirname(__FILE__));
-    if (!defined('RE')) define('RE', dirname(ROOT));
-    if (!defined('TMPROOT')) define('TMPROOT', dirname(RE));
-    $chemain = str_replace("\\", "/", TMPROOT);
-    return $chemain ;
-  }
-
-    // verifier si index existe
-   public function caheverif($contoller){
-      $cache = new Cache();
-      if ($contoller == 'executeIndex'){
-           
-          $file = $this->getchemain() . '/tmp/cache/views'.$_SERVER["REQUEST_URI"]. 'index.php';
-        
-          if (!file_exists($file)) {
-            //$cache->createcache($file);
-            return false;
-                      
-          }else{
-             return array('existe' => true,
-                     'chemain' => $file);
-          }
-          
-
-      }elseif ($contoller == 'executeShow') {
-      
-          $file = $this->getchemain() . '/tmp/cache/datas'.$_SERVER["REQUEST_URI"];
-
-          if (!file_exists($file)) {
-            return false;
-                    
-          }else{
-            return array('existe' => true,
-                     'chemain' => $file);   
-          }
-
-      }elseif ($contoller == 'executeInsertComment') {
-        //appler une function pour supprrimer les commenaire d'une news
-          $file = $this->getchemain() . '/tmp/cache/datas'.$_SERVER["REQUEST_URI"];
-          if (!file_exists($file)) {
-              return false;       
-          }else{
-             return array('existe' => true,
-                     'chemain' => $file); 
-          }
-      }   
-   }
-
- 
-
   public function execute()
   {
     //recucpurer le nom de l'application 
     $this->name = $this->app->name();
     $methood = 'execute'.ucfirst($this->action);
-    //instancier la class cache
-    //si le fichier cache existe on fait le traitement
-    $cache = new Cache();
-    //echo $cache->getChemain();
       
-    
-    
     if (!is_callable([$this, $methood]))
     {
       throw new \RuntimeException('L\'action "'.$this->action.'" n\'est pas définie sur ce module');
     }
-    
-    //print_r($this->$methood);
+
     $this->$methood($this->app->httpRequest());
+
    return $methood;
   }
 
@@ -115,9 +55,7 @@ abstract class BackController extends ApplicationComponent
     {
       throw new \InvalidArgumentException('Le module doit être une chaine de caractères valide');
     }
-
     $this->module = $module;
-   // echo $this->module;  (news)
   }
 
   public function setAction($action)
@@ -126,14 +64,8 @@ abstract class BackController extends ApplicationComponent
     {
       throw new \InvalidArgumentException('L\'action doit être une chaine de caractères valide');
     }
-
     $this->action = $action;
-    //echo $this->action;  (index)
   }
-
-
-
- 
 
   public function setView($view)
   {
@@ -143,13 +75,11 @@ abstract class BackController extends ApplicationComponent
     }
 
     $this->view = $view;
-
-    //si il existe en cache et la date est correcte il faut excuter le cache 
-    //if (! $variable = $cache->read('variable')){
-    //$filename = $actresss.'/App/'.$this->app->name().'/Modules/'.$this->module.'/Views/'.$this->view.'.php';
-    //echo  $filename;
-    $var = $this->getchemain();
-    $this->page->setContentFile($var.'/App/'.$this->app->name().'/Modules/'.$this->module.'/Views/'.$this->view.'.php');
+    ////////////////////////////////////////////
+    //instancier la class cache pour appler la methode getchemain()
+    $cache = new Cache();
+    ////////////////////////////////////////
+    $this->page->setContentFile($cache->getchemain().'/App/'.$this->app->name().'/Modules/'.$this->module.'/Views/'.$this->view.'.php');
     
    
   }
