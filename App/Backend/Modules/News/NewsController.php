@@ -177,6 +177,10 @@ class NewsController extends BackController
       $news = $this->managers->getManagerOf('News')->getUnique($id);
       $cache = new Cache();          
       $cache->deleteCacheData($news['id']);
+      $root = $cache->getChemain();
+      $file = $root.'/tmp/cache/views/index.php';
+      //appler @Methode pour supprimer le cache de la page d'accueil 
+      $cache->deletecache($file,'index.php');
     return true;
    
   }
